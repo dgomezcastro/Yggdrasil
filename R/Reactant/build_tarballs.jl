@@ -497,6 +497,14 @@ if [[ "${bb_full_target}" == *gpu+rocm* ]]; then
         $ROCM_PATH/lib/libhipblaslt.so* \
         -t ${libdir}
     
+    install -Dvm 755 \
+        $ROCM_PATH/lib/libamdhip64.so* \
+        -t ${libdir}
+    
+    install -Dvm 755 \
+        $ROCM_PATH/lib/librocroller.so* \
+        -t ${libdir}
+    
      install -Dvm 755 \
         $ROCM_PATH/lib/host-math/lib/libcholmod.so* \
        -t ${libdir}/host-math/lib
@@ -537,7 +545,7 @@ if [[ "${bb_full_target}" == *gpu+rocm* ]]; then
 
     # Simplify ridiculously long rpath of `libReactantExtra.so`,
     # we moved all deps in `${libdir}` anyway.
-    patchelf --set-rpath '$ORIGIN' bazel-bin/libReactantExtra.so
+    patchelf --set-rpath '$ORIGIN:$ORIGIN/rocm_sysdeps/lib' bazel-bin/libReactantExtra.so
 
 fi
 
