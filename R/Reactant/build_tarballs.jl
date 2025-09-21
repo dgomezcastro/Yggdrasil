@@ -9,7 +9,7 @@ repo = "https://github.com/EnzymeAD/Reactant.jl.git"
 version = v"0.0.241"
 
 sources = [
-   GitSource(repo, "cd24264260dbf8ebe466fcdc7245f99040179451"),
+   GitSource(repo, "7d8866e6862bcebb876e4d970798557dff773020"),
    ArchiveSource("https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.7%2B6/OpenJDK21U-jdk_x64_alpine-linux_hotspot_21.0.7_6.tar.gz", "79ecc4b213d21ae5c389bea13c6ed23ca4804a45b7b076983356c28105580013"),
    ArchiveSource("https://github.com/JuliaBinaryWrappers/Bazel_jll.jl/releases/download/Bazel-v7.6.1+0/Bazel.v7.6.1.x86_64-linux-musl-cxx03.tar.gz", "01ac6c083551796f1f070b0dc9c46248e6c49e01e21040b0c158f6e613733345")
 ]
@@ -341,7 +341,9 @@ sed -i -e "s/BB_TARGET/${bb_target}/g" \
 
 export HERMETIC_PYTHON_VERSION=3.12
 
+
 $BAZEL ${BAZEL_FLAGS[@]} build ${BAZEL_BUILD_FLAGS[@]}
+
 sed -i "s/^cc_library(/cc_library(linkstatic=True,/g" /workspace/bazel_root/*/external/llvm-raw/utils/bazel/llvm-project-overlay/mlir/BUILD.bazel
 sed -i "s/name = \\"protoc\\"/name = \\"protoc\\", features=[\\"fully_static_link\\"]/g" /workspace/bazel_root/*/external/com_google_protobuf/BUILD.bazel
 if [[ "${target}" == *-darwin* ]]; then
@@ -519,6 +521,10 @@ if [[ "${bb_full_target}" == *gpu+rocm* ]]; then
      
      install -Dvm 755 \
         $ROCM_PATH/lib/host-math/lib/libccolamd.so* \
+       -t ${libdir}/host-math/lib
+     
+     install -Dvm 755 \
+        $ROCM_PATH/lib/host-math/lib/libcolamd.so* \
        -t ${libdir}/host-math/lib
      
      install -Dvm 755 \
